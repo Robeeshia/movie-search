@@ -1,9 +1,10 @@
 import React, { useState,useEffect } from 'react';
 import { searchMovie } from '../api/api'; // Adjust the path as per your project structure
 import SearchIcon from "../SearchIcon.svg"
+import MovieCard from './MovieCard';
 
 const MovieSearch = () => {
-  const [searchTerm, setQuery] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [results, setResults] = useState([]);
   const [error, setError] = useState(null);
 
@@ -17,9 +18,9 @@ const MovieSearch = () => {
     }
   };
 
-  // useEffect(()=>{
-  //   handleSearch("Aaa","S");
-  // },[])
+  useEffect(()=>{
+    handleSearch("Aaa","S");
+  },[])
 
   return (
     <div className='movie-home'>
@@ -29,22 +30,28 @@ const MovieSearch = () => {
       <input
         type="text"
         value={searchTerm}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Search for a movie..."
       />
-      <button onClick={handleSearch}>
-        <img src= {{SearchIcon}} alt ="search"/>
-        Search</button>
+        <img src= {SearchIcon} alt ="Search" onClick={()=> handleSearch(searchTerm,"s")}/>
       </div>
-
-
-      {error && <div>Error: {error}</div>}
-      <ul>
-        {results.map((movie) => (<>
-        {/* <img src={movie.Poster}/> */}
-          <li key={movie.imdbID}>{movie.Title} ({movie.Year})</li></>
+      
+        {results?.length > 0 ? (
+          <div className='container'>
+          {results.map((movie) => (
+            <MovieCard movie={movie}/>
+            
         ))}
-      </ul>
+
+        </div>
+      
+      ):(
+        <div className='empty'>
+          <h2>No Movies Found</h2>
+        </div>
+        )
+      }
+      
     </div>
   );
 };
